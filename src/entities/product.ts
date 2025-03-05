@@ -10,7 +10,7 @@ export class Product {
 
     public static build(name: string, price: number) {
         const productProps: ProductProps = {
-            id: crypto.randomUUID.toString(),
+            id: crypto.randomUUID().toString(),
             name,
             price,
             quantity: 0

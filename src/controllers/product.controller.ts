@@ -1,59 +1,71 @@
 import { Request, Response } from "express";
-
 import { ProductRepositoryPrismaImplementation } from "../repositories/product.repository.implementation";
 import { ProductServiceImplementation } from "../services/product.service.implementation";
 import { prisma } from "../utils/prisma.util";
 
-
 export class ProductController {
 
-    private constructor() { }
+    private static productService: ProductServiceImplementation;
+
+    private constructor() {}
 
     public static build() {
         return new ProductController();
     }
 
+    public async listProductsInInventory(req: Request, res: Response) {
+        const response = await ProductController.getProductService().listInventory();
+
+        res.status(200).json(response);
+    }
+
+    public async getProductInfo(req: Request, res: Response) {
+        const { id } = req.params;
+
+        const response = await ProductController.getProductService().getProductInfo(id);
+
+        res.status(200).json(response);
+    }
+
     public async createNewProduct(req: Request, res: Response) {
         const { name, price } = req.body;
 
-        const productRepository = ProductRepositoryPrismaImplementation.build(prisma);
-        const productService = ProductServiceImplementation.build(productRepository);
+        const response = await ProductController.getProductService().addProduct(name, price);
 
-        const response = await productService.addProduct(name, price);
-
-        res.status(201).json(response).send();
-    }
-
-    public async listProductsInInventory(req: Request, res: Response) {
-        const productRepository = ProductRepositoryPrismaImplementation.build(prisma);
-        const productService = ProductServiceImplementation.build(productRepository);
-
-        const response = await productService.listInventory();
-
-        res.status(200).json(response).send();
+        res.status(201).json(response);
     }
 
     public async buyProduct(req: Request, res: Response) {
         const { id } = req.params;
         const { amount } = req.body;
 
-        const productRepository = ProductRepositoryPrismaImplementation.build(prisma);
-        const productService = ProductServiceImplementation.build(productRepository);
+        const response = await ProductController.getProductService().buyProduct(id, amount);
 
-        const response = await productService.buyProduct(id, amount);
-
-        res.status(200).json(response).send();
+        res.status(200).json(response);
     }
 
     public async sellProduct(req: Request, res: Response) {
         const { id } = req.params;
         const { amount } = req.body;
 
-        const productRepository = ProductRepositoryPrismaImplementation.build(prisma);
-        const productService = ProductServiceImplementation.build(productRepository);
+        const response = await ProductController.getProductService().sellProduct(id, amount);
 
-        const response = await productService.sellProduct(id, amount);
+        res.status(200).json(response);
+    }
 
-        res.status(200).json(response).send();
+    public async removeProduct(req: Request, res: Response) {
+        const { id } = req.params;
+
+        await ProductController.getProductService().removeProduct(id);
+
+        res.status(204).send();
+    }
+
+    private static getProductService(): ProductServiceImplementation {
+        if (!this.productService) {
+            const productRepository = ProductRepositoryPrismaImplementation.build(prisma);
+            this.productService = ProductServiceImplementation.build(productRepository);
+        }
+        return this.productService;
     }
 }

@@ -15,6 +15,41 @@ export class ProductServiceImplementation implements ProductService {
         return new ProductServiceImplementation(productRepository);
     }
 
+    public async listInventory(): Promise<ListResponseDto> {
+        const productList = await this.productRepository.list();
+
+        const productDtoList: ProductDto[] = productList.map(product => {
+            return {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                balance: product.quantity
+            }
+        })
+
+        const response: ListResponseDto = {
+            products: productDtoList
+        }
+
+        return response;
+    }
+
+    public async getProductInfo(id: string): Promise<ProductDto> {
+        const product = await this.productRepository.findById(id);
+        if(!product) {
+            throw new Error(`Product with id ${id} not found`);
+        }
+
+        const response: ProductDto = {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            balance: product.quantity
+        }
+
+        return response;
+    }
+
     public async sellProduct(id: string, amount: number): Promise<SellResponseDto> {
         const product = await this.productRepository.findById(id);
         if(!product) {
@@ -51,25 +86,6 @@ export class ProductServiceImplementation implements ProductService {
         return response;
     }
 
-    public async listInventory(): Promise<ListResponseDto> {
-        const productList = await this.productRepository.list();
-
-        const productDtoList: ProductDto[] = productList.map(product => {
-            return {
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                balance: product.quantity
-            }
-        })
-
-        const response: ListResponseDto = {
-            products: productDtoList
-        }
-
-        return response;
-    }
-
     public async addProduct(name: string, price: number): Promise<AddProductResponseDto> {
         const newProduct = await this.productRepository.save(Product.build(name, price));
         
@@ -79,5 +95,9 @@ export class ProductServiceImplementation implements ProductService {
         }
 
         return response;
+    }
+
+    public async removeProduct(id: string): Promise<void> {
+        await this.productRepository.delete(id);
     }
 }
