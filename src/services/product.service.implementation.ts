@@ -4,6 +4,8 @@ import { BuyResponseDto } from "../dtos/buy-response.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
 import { ProductRepository } from "../repositories/interfaces/product.repository";
 import { ProductDto } from "../dtos/product.dto";
+import { AddProductResponseDto } from "../dtos/add-product-response.dto";
+import { Product } from "../entities/product";
 
 export class ProductServiceImplementation implements ProductService {
 
@@ -21,11 +23,11 @@ export class ProductServiceImplementation implements ProductService {
 
         product.sell(amount);
         
-        await this.productRepository.update(product)
+        const soldProduct = await this.productRepository.update(product)
 
         const response: SellResponseDto = {
-            id: product.id,
-            balance: product.quantity
+            id: soldProduct.id,
+            balance: soldProduct.quantity
         }
 
         return response;
@@ -39,11 +41,11 @@ export class ProductServiceImplementation implements ProductService {
 
         product.increaseQuantityInStock(amount);
 
-        await this.productRepository.update(product);
+        const updatedProduct = await this.productRepository.update(product);
 
         const response: BuyResponseDto = {
-            id: product.id,
-            balance: product.quantity
+            id: updatedProduct.id,
+            balance: updatedProduct.quantity
         }
 
         return response;
@@ -63,6 +65,17 @@ export class ProductServiceImplementation implements ProductService {
 
         const response: ListResponseDto = {
             products: productDtoList
+        }
+
+        return response;
+    }
+
+    public async addProduct(name: string, price: number): Promise<AddProductResponseDto> {
+        const newProduct = await this.productRepository.save(Product.build(name, price));
+        
+        const response: AddProductResponseDto = {
+            id: newProduct.id,
+            balance: newProduct.quantity
         }
 
         return response;

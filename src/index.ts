@@ -8,7 +8,6 @@ import bodyParser from "body-parser";
 
 // Origins for CORS (in env):
 import corsOptions from "./config/cors-options.config";
-import router from "./controllers/test.controller";
 
 dotenv.config();
 
@@ -22,8 +21,6 @@ app.use(hpp());
 app.use(morgan("combined"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use("/test", router)
 
 app.listen(PORT, () => {
     console.log(`[server]: Server is running and listening at port: ${PORT}`);
