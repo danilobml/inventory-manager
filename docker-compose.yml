@@ -1,0 +1,24 @@
+services:
+  app:
+    build: .
+    container_name: inventory_manager
+    restart: always
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./db:/app/db
+    environment:
+      - PORT=3001
+      - ALLOWED_CORS_ORIGINS=*
+      - DATABASE_URL=file:/app/db/dev.db
+    depends_on:
+      - migrate
+
+  migrate:
+    build: .
+    container_name: prisma_migrate
+    command: ["npx", "prisma", "migrate", "deploy"]
+    volumes:
+      - ./db:/app/db
+    environment:
+      - DATABASE_URL=file:/app/db/dev.db
