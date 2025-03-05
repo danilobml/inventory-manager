@@ -23,7 +23,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/db ./db
 COPY --from=builder /app/package.json ./
-COPY --from=builder /app/.env .env
 
 ENV NODE_ENV=production
 
