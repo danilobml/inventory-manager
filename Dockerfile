@@ -1,4 +1,4 @@
-# Build:
+# Build Stage:
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN npx prisma generate
 
 RUN npm run build
 
-# Run:
+# Running Image:
 FROM node:20-alpine
 
 WORKDIR /app

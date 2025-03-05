@@ -11,62 +11,84 @@ export class ProductRepositoryPrismaImplementation implements ProductRepository 
     }
 
     public async list(): Promise<Product[]> {
-        const dbProducts = await this.prisma.product.findMany();
+        try {
+            const dbProducts = await this.prisma.product.findMany();
 
-        const listProducts = dbProducts.map(dbProduct => Product.with(dbProduct.id, dbProduct.name, dbProduct.price, dbProduct.quantity))
+            const listProducts = dbProducts.map(dbProduct => 
+                Product.with(dbProduct.id, dbProduct.name, dbProduct.price, dbProduct.quantity)
+            );
 
-        return listProducts;
+            return listProducts;
+        } catch (error: unknown) {
+            console.error("Database operation error in list():", error);
+            throw error;
+        }
     }
 
     public async findById(id: string): Promise<Product | null> {
-        const dbProduct = await this.prisma.product.findUnique({
-            where: { id }
-        })
+        try {
+            const dbProduct = await this.prisma.product.findUnique({
+                where: { id }
+            });
 
-        if (!dbProduct) {
-            return null;
+            if (!dbProduct) {
+                return null;
+            }
+
+            return Product.with(dbProduct.id, dbProduct.name, dbProduct.price, dbProduct.quantity);
+        } catch (error: unknown) {
+            console.error(`Database operation error in findById(${id}):`, error);
+            throw error;
         }
-
-        const product = Product.with(dbProduct.id, dbProduct.name, dbProduct.price, dbProduct.quantity);
-
-        return product;
     }
 
     public async save(product: Product): Promise<Product> {
-        const data = {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            quantity: product.quantity
+        try {
+            const data = {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: product.quantity
+            };
+
+            const newDbProduct = await this.prisma.product.create({ data });
+
+            return Product.with(newDbProduct.id, newDbProduct.name, newDbProduct.price, newDbProduct.quantity);
+        } catch (error: unknown) {
+            console.error("Database operation error in save():", error);
+            throw error;
         }
-        const newDbProduct = await this.prisma.product.create({data})
-
-        const newProduct = Product.with(newDbProduct.id, newDbProduct.name, newDbProduct.price, newDbProduct.quantity);
-
-        return newProduct;
     }
 
     public async update(product: Product): Promise<Product> {
-        const data = {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            quantity: product.quantity
+        try {
+            const data = {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: product.quantity
+            };
+
+            const updatedDbProduct = await this.prisma.product.update({
+                where: { id: product.id },
+                data
+            });
+
+            return Product.with(updatedDbProduct.id, updatedDbProduct.name, updatedDbProduct.price, updatedDbProduct.quantity);
+        } catch (error: unknown) {
+            console.error(`Database operation error in update(${product.id}):`, error);
+            throw error;
         }
-
-        const updatedDbProduct = await this.prisma.product.update({
-            where: { id: product.id },
-            data
-        })
-
-        const updatedProduct = Product.with(updatedDbProduct.id, updatedDbProduct.name, updatedDbProduct.price, updatedDbProduct.quantity);
-
-        return updatedProduct;
     }
 
     public async delete(id: string): Promise<void> {
-        await this.prisma.product.delete({
-            where: { id }
-        })
+        try {
+            await this.prisma.product.delete({
+                where: { id }
+            });
+        } catch (error: unknown) {
+            console.error(`Database operation error in delete(${id}):`, error);
+            throw error;
+        }
     }
 }

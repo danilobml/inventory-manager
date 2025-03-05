@@ -16,88 +16,91 @@ export class ProductServiceImplementation implements ProductService {
     }
 
     public async listInventory(): Promise<ListResponseDto> {
-        const productList = await this.productRepository.list();
+        try {
+            const productList = await this.productRepository.list();
+            const productDtoList: ProductDto[] = productList.map(product => ({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                balance: product.quantity
+            }));
 
-        const productDtoList: ProductDto[] = productList.map(product => {
+            return { products: productDtoList };
+        } catch (error) {
+            console.error("Error in listInventory():", error);
+            throw error;
+        }
+    }
+
+    public async getProductInfo(id: string): Promise<ProductDto> {
+        try {
+            const product = await this.productRepository.findById(id);
+            if (!product) {
+                throw new Error(`Product with id ${id} not found`);
+            }
+
             return {
                 id: product.id,
                 name: product.name,
                 price: product.price,
                 balance: product.quantity
-            }
-        })
-
-        const response: ListResponseDto = {
-            products: productDtoList
+            };
+        } catch (error) {
+            console.error(`Error in getProductInfo(${id}):`, error);
+            throw error;
         }
-
-        return response;
-    }
-
-    public async getProductInfo(id: string): Promise<ProductDto> {
-        const product = await this.productRepository.findById(id);
-        if(!product) {
-            throw new Error(`Product with id ${id} not found`);
-        }
-
-        const response: ProductDto = {
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            balance: product.quantity
-        }
-
-        return response;
     }
 
     public async sellProduct(id: string, amount: number): Promise<SellResponseDto> {
-        const product = await this.productRepository.findById(id);
-        if(!product) {
-            throw new Error(`Product with id ${id} not found`);
+        try {
+            const product = await this.productRepository.findById(id);
+            if (!product) {
+                throw new Error(`Product with id ${id} not found`);
+            }
+
+            product.sell(amount);
+            const soldProduct = await this.productRepository.update(product);
+
+            return { id: soldProduct.id, balance: soldProduct.quantity };
+        } catch (error) {
+            console.error(`Error in sellProduct(${id}, ${amount}):`, error);
+            throw error;
         }
-
-        product.sell(amount);
-        
-        const soldProduct = await this.productRepository.update(product)
-
-        const response: SellResponseDto = {
-            id: soldProduct.id,
-            balance: soldProduct.quantity
-        }
-
-        return response;
     }
-    
+
     public async buyProduct(id: string, amount: number): Promise<BuyResponseDto> {
-        const product = await this.productRepository.findById(id);
-        if(!product) {
-            throw new Error(`Product with id ${id} not found`);
+        try {
+            const product = await this.productRepository.findById(id);
+            if (!product) {
+                throw new Error(`Product with id ${id} not found`);
+            }
+
+            product.increaseQuantityInStock(amount);
+            const updatedProduct = await this.productRepository.update(product);
+
+            return { id: updatedProduct.id, balance: updatedProduct.quantity };
+        } catch (error) {
+            console.error(`Error in buyProduct(${id}, ${amount}):`, error);
+            throw error;
         }
-
-        product.increaseQuantityInStock(amount);
-
-        const updatedProduct = await this.productRepository.update(product);
-
-        const response: BuyResponseDto = {
-            id: updatedProduct.id,
-            balance: updatedProduct.quantity
-        }
-
-        return response;
     }
 
     public async addProduct(name: string, price: number): Promise<AddProductResponseDto> {
-        const newProduct = await this.productRepository.save(Product.build(name, price));
-        
-        const response: AddProductResponseDto = {
-            id: newProduct.id,
-            balance: newProduct.quantity
+        try {
+            const newProduct = await this.productRepository.save(Product.build(name, price));
+            return { id: newProduct.id, balance: newProduct.quantity };
+        } catch (error) {
+            console.error("Error in addProduct():", error);
+            throw error;
         }
-
-        return response;
     }
 
     public async removeProduct(id: string): Promise<void> {
-        await this.productRepository.delete(id);
+        try {
+            await this.productRepository.delete(id);
+        } catch (error) {
+            console.error(`Error in removeProduct(${id}):`, error);
+            throw error;
+        }
     }
 }

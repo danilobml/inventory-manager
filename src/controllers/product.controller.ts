@@ -4,7 +4,6 @@ import { ProductServiceImplementation } from "../services/product.service.implem
 import { prisma } from "../utils/prisma.util";
 
 export class ProductController {
-
     private static productService: ProductServiceImplementation;
 
     private constructor() {}
@@ -14,51 +13,70 @@ export class ProductController {
     }
 
     public async listProductsInInventory(req: Request, res: Response) {
-        const response = await ProductController.getProductService().listInventory();
-
-        res.status(200).json(response);
+        try {
+            const response = await ProductController.getProductService().listInventory();
+            res.status(200).json(response);
+        } catch (error) {
+            console.error("Error in listProductsInInventory:", error);
+            res.status(500).json({ message: "Internal Server Error" });
+        }
     }
 
     public async getProductInfo(req: Request, res: Response) {
-        const { id } = req.params;
-
-        const response = await ProductController.getProductService().getProductInfo(id);
-
-        res.status(200).json(response);
+        try {
+            const { id } = req.params;
+            const response = await ProductController.getProductService().getProductInfo(id);
+            res.status(200).json(response);
+        } catch (error) {
+            console.error(`Error in getProductInfo(${req.params.id}):`, error);
+            res.status(404).json({ message: "Product not found" });
+        }
     }
 
     public async createNewProduct(req: Request, res: Response) {
-        const { name, price } = req.body;
-
-        const response = await ProductController.getProductService().addProduct(name, price);
-
-        res.status(201).json(response);
+        try {
+            const { name, price } = req.body;
+            const response = await ProductController.getProductService().addProduct(name, price);
+            res.status(201).json(response);
+        } catch (error) {
+            console.error("Error in createNewProduct:", error);
+            res.status(400).json({ message: "Invalid product data" });
+        }
     }
 
     public async buyProduct(req: Request, res: Response) {
-        const { id } = req.params;
-        const { amount } = req.body;
-
-        const response = await ProductController.getProductService().buyProduct(id, amount);
-
-        res.status(200).json(response);
+        try {
+            const { id } = req.params;
+            const { amount } = req.body;
+            const response = await ProductController.getProductService().buyProduct(id, amount);
+            res.status(200).json(response);
+        } catch (error) {
+            console.error(`Error in buyProduct(${req.params.id}, ${req.body.amount}):`, error);
+            res.status(400).json({ message: "Purchase operation failed" });
+        }
     }
 
     public async sellProduct(req: Request, res: Response) {
-        const { id } = req.params;
-        const { amount } = req.body;
-
-        const response = await ProductController.getProductService().sellProduct(id, amount);
-
-        res.status(200).json(response);
+        try {
+            const { id } = req.params;
+            const { amount } = req.body;
+            const response = await ProductController.getProductService().sellProduct(id, amount);
+            res.status(200).json(response);
+        } catch (error) {
+            console.error(`Error in sellProduct(${req.params.id}, ${req.body.amount}):`, error);
+            res.status(400).json({ message: "Sale operation failed" });
+        }
     }
 
     public async removeProduct(req: Request, res: Response) {
-        const { id } = req.params;
-
-        await ProductController.getProductService().removeProduct(id);
-
-        res.status(204).send();
+        try {
+            const { id } = req.params;
+            await ProductController.getProductService().removeProduct(id);
+            res.status(204).send();
+        } catch (error) {
+            console.error(`Error in removeProduct(${req.params.id}):`, error);
+            res.status(400).json({ message: "Product deletion failed" });
+        }
     }
 
     private static getProductService(): ProductServiceImplementation {
