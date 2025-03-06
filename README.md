@@ -9,6 +9,7 @@
 - Auth: JWT and Bcrypt
 - Sqlite DB (in the container)
 - Containerization: Docker and docker-compose
+- Linting/codecheck: Prettier + ES Lint
 
 ## Design:
 
