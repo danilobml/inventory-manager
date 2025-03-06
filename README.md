@@ -14,9 +14,9 @@
 - SOLID principles applied
 
 ## Run Locally:
-(If you have Docker installed)
-- Clone the repository
-- Run in the promt, at the project root folder: docker-compose up -d
+(If you have Docker installed, if not refer to: https://docs.docker.com/desktop)
+- Clone repository: git clone https://github.com/danilobml/inventory-manager.git
+- Run in your prompt, at the project root folder, the command: docker-compose up -d
 
 ## Paths:
 ### Auth:
