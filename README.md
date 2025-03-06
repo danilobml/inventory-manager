@@ -10,7 +10,7 @@
 
 ## Design:
 - MVC Design Pattern
-- Object Oriented
+- Object Oriented Programming (OOP)
 - SOLID principles applied
 
 ## Run Locally:
