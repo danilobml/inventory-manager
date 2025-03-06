@@ -6,6 +6,7 @@
 - ORM: Prisma
 - Validation: Zog
 - Auth: JWT and Bcrypt
+- Sqlite DB (in the container)
 - Containerization: Docker and docker-compose
 
 ## Design:
