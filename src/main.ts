@@ -4,6 +4,7 @@ import { AuthController } from "./controllers/auth.controller";
 import { validateRequest } from "./middlewares/validate.middleware";
 import { createProductSchema, buySellProductSchema } from "./validation/product.validation";
 import { authSchema } from "./validation/auth.validation";
+import { authenticateRoute } from "./middlewares/authenticate.middleware";
 import { PORT } from "./utils/constants.util";
 
 
@@ -19,7 +20,11 @@ function main() {
     const productsBaseRoute = "products";
     const authBaseRoute = "auth";
 
-    api.addGetRoute(`${apiBaseRoute}/${productsBaseRoute}`, productController.listProductsInInventory);
+    api.addGetRoute(
+        `${apiBaseRoute}/${productsBaseRoute}`,
+        authenticateRoute,
+        productController.listProductsInInventory
+    );
     api.addGetRoute(`${apiBaseRoute}/${productsBaseRoute}/:id`, productController.getProductInfo);
     api.addPostRoute(`${apiBaseRoute}/${productsBaseRoute}`, 
         validateRequest(createProductSchema), 
