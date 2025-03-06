@@ -78,6 +78,19 @@ export class ProductController {
         }
     }
 
+    public async updateProductInfo(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const { name, price } = req.body;
+            const response = await ProductController.getProductService().updateProduct(id, name, price);
+            res.status(200).json(response);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
+            console.error(`Error in sellProduct(${req.params.id}, ${req.body.amount}):`, error);
+            res.status(400).json({ message: "Sale operation failed: ", "cause": errorMessage });
+        }
+    }
+
     public async removeProduct(req: Request, res: Response) {
         try {
             const { id } = req.params;

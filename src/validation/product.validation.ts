@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createProductSchema = z.object({
+export const createUpdateProductSchema = z.object({
     name: z.string().min(1, "must have at least one character."),
     price: z.number().positive("must be greater than 0.")
 });

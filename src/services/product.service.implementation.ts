@@ -6,6 +6,7 @@ import { ProductRepository } from "../repositories/interfaces/product.repository
 import { ProductDto } from "../dtos/product.dto";
 import { AddProductResponseDto } from "../dtos/add-product-response.dto";
 import { Product } from "../entities/product";
+import { error } from "console";
 
 export class ProductServiceImplementation implements ProductService {
 
@@ -89,6 +90,36 @@ export class ProductServiceImplementation implements ProductService {
         try {
             const newProduct = await this.productRepository.save(Product.build(name, price));
             return { id: newProduct.id, balance: newProduct.quantity };
+        } catch (error) {
+            console.error("Error in addProduct():", error);
+            throw error;
+        }
+    }
+
+    public async updateProduct(id: string, name: string, price: number): Promise<ProductDto> {
+        try {
+            const productToUpdate = await this.productRepository.findById(id);
+            if (!productToUpdate) {
+                throw new Error("Product not found")
+            } 
+
+            const productWithUpdates = Product.with(
+                productToUpdate.id,
+                name || productToUpdate.name,
+                price || productToUpdate.price,
+                productToUpdate.quantity
+            );  
+
+            const updatedProduct = await this.productRepository.update(productWithUpdates);
+            
+            const updatedProductDto: ProductDto = {
+                id: updatedProduct.id,
+                name: updatedProduct.name,
+                price: updatedProduct.price,
+                balance: updatedProduct.quantity
+            };
+
+            return updatedProductDto;  
         } catch (error) {
             console.error("Error in addProduct():", error);
             throw error;

@@ -2,7 +2,7 @@ import { ApiExpress } from "./api/api.express";
 import { ProductController } from "./controllers/product.controller";
 import { AuthController } from "./controllers/auth.controller";
 import { validateRequest } from "./middlewares/validate.middleware";
-import { createProductSchema, buySellProductSchema } from "./validation/product.validation";
+import { createUpdateProductSchema, buySellProductSchema } from "./validation/product.validation";
 import { authSchema } from "./validation/auth.validation";
 import { authenticateRoute } from "./middlewares/authenticate.middleware";
 import { PORT } from "./utils/constants.util";
@@ -44,7 +44,7 @@ function main() {
     );
     api.addPostRoute(`${apiBaseRoute}/${productsBaseRoute}`,
         authenticateRoute,
-        validateRequest(createProductSchema), 
+        validateRequest(createUpdateProductSchema), 
         productController.createNewProduct
     );
     api.addPostRoute(`${apiBaseRoute}/${productsBaseRoute}/:id/buy`,
@@ -57,6 +57,12 @@ function main() {
         validateRequest(buySellProductSchema), 
         productController.sellProduct
     );
+    api.addPutRoute(
+        `${apiBaseRoute}/${productsBaseRoute}/:id`,
+        authenticateRoute,
+        validateRequest(createUpdateProductSchema),
+        productController.updateProductInfo
+    )
     api.addDeleteRoute(`${apiBaseRoute}/${productsBaseRoute}/:id`,
         authenticateRoute,
         productController.removeProduct
