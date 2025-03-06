@@ -20,26 +20,7 @@ function main() {
     const productsBaseRoute = "products";
     const authBaseRoute = "auth";
 
-    api.addGetRoute(
-        `${apiBaseRoute}/${productsBaseRoute}`,
-        authenticateRoute,
-        productController.listProductsInInventory
-    );
-    api.addGetRoute(`${apiBaseRoute}/${productsBaseRoute}/:id`, productController.getProductInfo);
-    api.addPostRoute(`${apiBaseRoute}/${productsBaseRoute}`, 
-        validateRequest(createProductSchema), 
-        productController.createNewProduct
-    );
-    api.addPostRoute(`${apiBaseRoute}/${productsBaseRoute}/:id/buy`, 
-        validateRequest(buySellProductSchema), 
-        productController.buyProduct
-    );
-    api.addPostRoute(`${apiBaseRoute}/${productsBaseRoute}/:id/sell`, 
-        validateRequest(buySellProductSchema), 
-        productController.sellProduct
-    );
-    api.addDeleteRoute(`${apiBaseRoute}/${productsBaseRoute}/:id`, productController.removeProduct);
-    
+    // Auth
     api.addPostRoute(
         `${apiBaseRoute}/${authBaseRoute}/register`,
         validateRequest(authSchema),
@@ -50,6 +31,36 @@ function main() {
         validateRequest(authSchema),
         authController.login
     )
+
+    // Products
+    api.addGetRoute(
+        `${apiBaseRoute}/${productsBaseRoute}`,
+        authenticateRoute,
+        productController.listProductsInInventory
+    );
+    api.addGetRoute(`${apiBaseRoute}/${productsBaseRoute}/:id`,
+        authenticateRoute,
+        productController.getProductInfo
+    );
+    api.addPostRoute(`${apiBaseRoute}/${productsBaseRoute}`,
+        authenticateRoute,
+        validateRequest(createProductSchema), 
+        productController.createNewProduct
+    );
+    api.addPostRoute(`${apiBaseRoute}/${productsBaseRoute}/:id/buy`,
+        authenticateRoute,
+        validateRequest(buySellProductSchema), 
+        productController.buyProduct
+    );
+    api.addPostRoute(`${apiBaseRoute}/${productsBaseRoute}/:id/sell`,
+        authenticateRoute,
+        validateRequest(buySellProductSchema), 
+        productController.sellProduct
+    );
+    api.addDeleteRoute(`${apiBaseRoute}/${productsBaseRoute}/:id`,
+        authenticateRoute,
+        productController.removeProduct
+    );
 
     api.start(PORT);
 }
