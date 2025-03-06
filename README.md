@@ -17,7 +17,7 @@
 (If you have Docker installed, if not refer to: https://docs.docker.com/desktop)
 - Clone repository: git clone https://github.com/danilobml/inventory-manager.git (if using HTTPS, check for SSH)
 - Run in your local prompt, at the project root folder, the command: docker-compose up -d
-- Register and Login an user (at the respective routes described below)
+- Register a new user, or login with an existing one (at the respective routes described below)
 - Copy the token that comes in the response body of either and paste it in any new requests to the other routes, adding the header "Authorization": "Bearer [token]" 
 
 ## Routes:
