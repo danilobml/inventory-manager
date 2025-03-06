@@ -12,6 +12,14 @@ export class ProductController {
         return new ProductController();
     }
 
+    private static getProductService(): ProductServiceImplementation {
+        if (!this.productService) {
+            const productRepository = ProductRepositoryPrismaImplementation.build(prisma);
+            this.productService = ProductServiceImplementation.build(productRepository);
+        }
+        return this.productService;
+    }
+
     public async listProductsInInventory(req: Request, res: Response) {
         try {
             const response = await ProductController.getProductService().listInventory();
@@ -80,13 +88,5 @@ export class ProductController {
             console.error(`Error in removeProduct(${req.params.id}):`, error);
             res.status(400).json({ message: "Product deletion failed: ", "cause": errorMessage });
         }
-    }
-
-    private static getProductService(): ProductServiceImplementation {
-        if (!this.productService) {
-            const productRepository = ProductRepositoryPrismaImplementation.build(prisma);
-            this.productService = ProductServiceImplementation.build(productRepository);
-        }
-        return this.productService;
     }
 }

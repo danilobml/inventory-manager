@@ -15,3 +15,10 @@ model Product {
   price Float
   quantity Int
 }
+
+model User {
+  @@map("users")
+  id String @id
+  email String @unique
+  password String
+}

@@ -11,6 +11,7 @@ services:
       - PORT=3001
       - ALLOWED_CORS_ORIGINS=*
       - DATABASE_URL=file:/app/db/dev.db
+      - JWT_SECRET=605675cb1e4e508e5a80bfc6ee82f082948ed4461d29077e0f3c1ed1a9a45dd0c519c2a4871f653848ceb9148bb9057e75a005c4a5e27cbf02a68b0128df2689
     depends_on:
       - migrate
 

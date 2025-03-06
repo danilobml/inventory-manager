@@ -1,12 +1,11 @@
-import dotenv from "dotenv"
-
 import { ApiExpress } from "./api/api.express";
 import { ProductController } from "./controllers/product.controller";
+import { AuthController } from "./controllers/auth.controller";
 import { validateRequest } from "./middlewares/validate.middleware";
 import { createProductSchema, buySellProductSchema } from "./validation/product.validation";
+import { authSchema } from "./validation/auth.validation";
+import { PORT } from "./utils/constants.util";
 
-dotenv.config();
-const PORT = process.env.PORT || 3001;
 
 function main() {
     const api = ApiExpress.build();
@@ -15,7 +14,10 @@ function main() {
 
     // Adding routes:
     const productController = ProductController.build();
+    const authController = AuthController.build();
+
     const productsBaseRoute = "products";
+    const authBaseRoute = "auth";
 
     api.addGetRoute(`${apiBaseRoute}/${productsBaseRoute}`, productController.listProductsInInventory);
     api.addGetRoute(`${apiBaseRoute}/${productsBaseRoute}/:id`, productController.getProductInfo);
@@ -32,6 +34,17 @@ function main() {
         productController.sellProduct
     );
     api.addDeleteRoute(`${apiBaseRoute}/${productsBaseRoute}/:id`, productController.removeProduct);
+    
+    api.addPostRoute(
+        `${apiBaseRoute}/${authBaseRoute}/register`,
+        validateRequest(authSchema),
+        authController.register
+    )
+    api.addPostRoute(
+        `${apiBaseRoute}/${authBaseRoute}/login`,
+        validateRequest(authSchema),
+        authController.login
+    )
 
     api.start(PORT);
 }
