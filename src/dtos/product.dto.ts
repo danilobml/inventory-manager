@@ -1,6 +1,6 @@
 export type ProductDto = {
-    id: string;
-    name: string;
-    price: number;
-    balance: number;
-}
+  id: string;
+  name: string;
+  price: number;
+  balance: number;
+};

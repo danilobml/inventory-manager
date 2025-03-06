@@ -1,4 +1,4 @@
 export type SellResponseDto = {
-    id: string;
-    balance: number;
-}
+  id: string;
+  balance: number;
+};

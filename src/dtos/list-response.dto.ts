@@ -1,5 +1,5 @@
-import { ProductDto } from "./product.dto"
+import { ProductDto } from './product.dto';
 
 export type ListResponseDto = {
-    products: ProductDto[];
-}
+  products: ProductDto[];
+};

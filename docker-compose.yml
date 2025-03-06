@@ -4,7 +4,7 @@ services:
     container_name: inventory_manager
     restart: always
     ports:
-      - "3001:3001"
+      - '3001:3001'
     volumes:
       - ./db:/app/db
     environment:
@@ -18,7 +18,7 @@ services:
   migrate:
     build: .
     container_name: prisma_migrate
-    command: ["npx", "prisma", "migrate", "deploy"]
+    command: ['npx', 'prisma', 'migrate', 'deploy']
     volumes:
       - ./db:/app/db
       - ./prisma:/app/prisma
