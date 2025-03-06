@@ -20,5 +20,6 @@ services:
     command: ["npx", "prisma", "migrate", "deploy"]
     volumes:
       - ./db:/app/db
+      - ./prisma:/app/prisma
     environment:
       - DATABASE_URL=file:/app/db/dev.db

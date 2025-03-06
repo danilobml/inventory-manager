@@ -50,9 +50,10 @@ export class ProductController {
             const { amount } = req.body;
             const response = await ProductController.getProductService().buyProduct(id, amount);
             res.status(200).json(response);
-        } catch (error) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
             console.error(`Error in buyProduct(${req.params.id}, ${req.body.amount}):`, error);
-            res.status(400).json({ message: "Purchase operation failed" });
+            res.status(400).json({ message: "Purchase operation failed: ", "cause": errorMessage });
         }
     }
 
@@ -62,9 +63,10 @@ export class ProductController {
             const { amount } = req.body;
             const response = await ProductController.getProductService().sellProduct(id, amount);
             res.status(200).json(response);
-        } catch (error) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
             console.error(`Error in sellProduct(${req.params.id}, ${req.body.amount}):`, error);
-            res.status(400).json({ message: "Sale operation failed" });
+            res.status(400).json({ message: "Sale operation failed: ", "cause": errorMessage });
         }
     }
 
@@ -73,9 +75,10 @@ export class ProductController {
             const { id } = req.params;
             await ProductController.getProductService().removeProduct(id);
             res.status(204).send();
-        } catch (error) {
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Unknown error";
             console.error(`Error in removeProduct(${req.params.id}):`, error);
-            res.status(400).json({ message: "Product deletion failed" });
+            res.status(400).json({ message: "Product deletion failed: ", "cause": errorMessage });
         }
     }
 

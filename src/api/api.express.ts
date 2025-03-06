@@ -1,5 +1,5 @@
 
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import hpp from "hpp";
@@ -10,8 +10,7 @@ import { API } from "./interfaces/api";
 // Origins for CORS (in env):
 import corsOptions from "../config/cors-options.config";
 
-type Handler = (req: Request, res: Response) => Promise<void>;
-
+type Handler = (req: Request, res: Response, next: NextFunction) => Promise<void> | void;
 
 export class ApiExpress implements API {
 
@@ -34,24 +33,24 @@ export class ApiExpress implements API {
         return new ApiExpress(app);
     }
 
-    public addGetRoute(path: string, handler: Handler): void {
-        this.app.get(path, handler);
+    public addGetRoute(path: string, ...handlers: Handler[]): void {
+        this.app.get(path, ...handlers);
     }
 
-    public addPostRoute(path: string, handler: Handler): void {
-        this.app.post(path, handler);
+    public addPostRoute(path: string, ...handlers: Handler[]): void {
+        this.app.post(path, ...handlers);
     }
 
-    public addPutRoute(path: string, handler: Handler): void {
-        this.app.put(path, handler);
+    public addPutRoute(path: string, ...handlers: Handler[]): void {
+        this.app.put(path, ...handlers);
     }
 
-    public addPatchRoute(path: string, handler: Handler): void {
-        this.app.patch(path, handler);
+    public addPatchRoute(path: string, ...handlers: Handler[]): void {
+        this.app.patch(path, ...handlers);
     }
 
-    public addDeleteRoute(path: string, handler: Handler): void {
-        this.app.delete(path, handler);
+    public addDeleteRoute(path: string, ...handlers: Handler[]): void {
+        this.app.delete(path, ...handlers);
     }
 
     public start(port: string | number): void {
