@@ -20,8 +20,8 @@
 
 ## Paths:
 ### Auth:
-- POST: http://localhost:3001/api/v1/auth/register -> signin/register new user (body: {"email": string, "password: string (min 6 chars)"})
-- POST: http://localhost:3001/api/v1/auth/login -> login user (body: {"email": string, "password: string (min 6 chars)"})
+- POST: http://localhost:3001/api/v1/auth/register -> signin/register new user (body: {"email": string, "password": string (min 6 chars)})
+- POST: http://localhost:3001/api/v1/auth/login -> login user (body: {"email": string, "password": string})
 
 ### Product:
 - GET: http://localhost:3001/api/v1/products -> list all products
