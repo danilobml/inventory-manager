@@ -10,6 +10,7 @@
 - Sqlite DB (in the container)
 - Containerization: Docker and docker-compose
 - Linting/codecheck: Prettier + ES Lint
+- Precommit hooks: Husky
 
 ## Design:
 
