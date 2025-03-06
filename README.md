@@ -5,7 +5,8 @@
 ### Security: Helmet and Hpp
 ### ORM: Prisma
 ### Validation: Zog
-### Docker
+### Auth with JWT and Bcrypt
+### Docker and compose
 
 ## Run Locally:
 (If you have Docker installed)
