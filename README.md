@@ -1,12 +1,12 @@
 # Inventory Manager - REST API for managing a product inventory, built with NodeJs - Express (TypeScript) and Prisma.
 
 ## Tooling:
-### Framework: NodeJs Express
-### Security: Helmet and Hpp
-### ORM: Prisma
-### Validation: Zog
-### Auth with JWT and Bcrypt
-### Docker and compose
+- Framework: NodeJs Express
+- Security: Helmet and Hpp
+- ORM: Prisma
+- Validation: Zog
+- Auth: JWT and Bcrypt
+- Containerization: Docker and docker-compose
 
 ## Design:
 - MVC Design Pattern
