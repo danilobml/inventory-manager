@@ -20,7 +20,7 @@
 - Register and Login an user (at the respective routes described below)
 - Copy the token that comes in the response body of either and paste it in any new requests to the other routes, adding the header "Authorization": "Bearer [token]" 
 
-## Paths:
+## Routes:
 ### Auth:
 - POST: http://localhost:3001/api/v1/auth/register -> signin/register new user (body: {"email": string, "password": string (min 6 chars)})
 - POST: http://localhost:3001/api/v1/auth/login -> login user (body: {"email": string, "password": string})
