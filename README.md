@@ -26,7 +26,7 @@
 - POST: http://localhost:3001/api/v1/auth/login -> login user (body: {"email": string, "password": string})
 
 ### Product:
-- GET: http://localhost:3001/api/v1/products -> list all products
+- GET: http://localhost:3001/api/v1/products -> lists all products
 - GET: http://localhost:3001/api/v1/products/{id} -> gets one product
 - POST: http://localhost:3001/api/v1/products -> creates one product (body: {"name": string, "price": float})
 - POST: http://localhost:3001/api/v1/products/{id}/buy -> buys (increases stock) of that product (body: {"amount": integer})
