@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthRepositoryImplementation } from '../repositories/auth.repository.implementation';
+import { AuthRepositoryPrismaImplementation } from '../repositories/auth.repository.implementation';
 import { AuthServiceImplementation } from '../services/auth.service.implementation';
 import { prisma } from '../utils/prisma.util';
 
@@ -14,7 +14,7 @@ export class AuthController {
 
   private static getAuthService() {
     if (!this.authService) {
-      const authRepository = AuthRepositoryImplementation.build(prisma);
+      const authRepository = AuthRepositoryPrismaImplementation.build(prisma);
       return AuthServiceImplementation.build(authRepository);
     }
     return this.authService;

@@ -4,11 +4,11 @@ import { AuthRepository } from './interfaces/auth.repository';
 import { User } from '../entities/user';
 import { hashPassword } from '../utils/bcrypt.util';
 
-export class AuthRepositoryImplementation implements AuthRepository {
+export class AuthRepositoryPrismaImplementation implements AuthRepository {
   private constructor(readonly prisma: PrismaClient) {}
 
   public static build(prisma: PrismaClient) {
-    return new AuthRepositoryImplementation(prisma);
+    return new AuthRepositoryPrismaImplementation(prisma);
   }
 
   public async findByEmail(email: string): Promise<User | null> {
