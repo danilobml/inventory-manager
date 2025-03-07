@@ -1,7 +1,8 @@
 import request from 'supertest';
+
 import { ApiExpress } from '../../src/api/api.express';
 import { AuthController } from '../../src/controllers/auth.controller';
-import { validateRequest } from '../../src/middlewares/validate.middleware';
+import { validateRequest } from '../middleware/validate.middleware';
 import { authSchema } from '../../src/validation/auth.validation';
 import { AuthServiceImplementation } from '../../src/services/auth.service.implementation';
 

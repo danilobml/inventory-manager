@@ -1,10 +1,10 @@
 import { ApiExpress } from './api/api.express';
 import { ProductController } from './controllers/product.controller';
 import { AuthController } from './controllers/auth.controller';
-import { validateRequest } from './middlewares/validate.middleware';
+import { validateRequest } from './middleware/validate.middleware';
 import { createUpdateProductSchema, buySellProductSchema } from './validation/product.validation';
 import { authSchema } from './validation/auth.validation';
-import { authenticateRoute } from './middlewares/authenticate.middleware';
+import { authenticateRoute } from './middleware/authenticate.middleware';
 import { PORT } from './utils/constants.util';
 
 function main() {
@@ -21,6 +21,7 @@ function main() {
 
   // Auth
   api.addPostRoute(`${apiBaseRoute}/${authBaseRoute}/register`, validateRequest(authSchema), authController.register);
+
   api.addPostRoute(`${apiBaseRoute}/${authBaseRoute}/login`, validateRequest(authSchema), authController.login);
 
   // Products
