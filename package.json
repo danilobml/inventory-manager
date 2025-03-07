@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest -o",
+    "commit:test": "jest -- --coverage",
     "dev": "npx nodemon --watch src --ext ts --exec 'ts-node ./src/main.ts'",
     "build": "tsc",
     "format": "prettier --write .",
