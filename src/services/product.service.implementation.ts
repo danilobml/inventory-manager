@@ -1,12 +1,11 @@
 import { ProductService } from './interfaces/product.service';
+import { ProductRepository } from '../repositories/interfaces/product.repository';
 import { SellResponseDto } from '../dtos/sell-response.dto';
 import { BuyResponseDto } from '../dtos/buy-response.dto';
 import { ListResponseDto } from '../dtos/list-response.dto';
-import { ProductRepository } from '../repositories/interfaces/product.repository';
 import { ProductDto } from '../dtos/product.dto';
 import { AddProductResponseDto } from '../dtos/add-product-response.dto';
 import { Product } from '../entities/product';
-import { error } from 'console';
 
 export class ProductServiceImplementation implements ProductService {
   private constructor(readonly productRepository: ProductRepository) {}
