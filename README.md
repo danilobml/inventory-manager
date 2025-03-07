@@ -11,6 +11,7 @@
 - Containerization: Docker and docker-compose
 - Linting/codecheck: Prettier + ES Lint
 - Precommit hooks: Husky
+- Jest and supertest for unit and integration tests
 
 ## Design:
 
