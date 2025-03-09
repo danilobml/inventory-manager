@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest -o",
-    "commit:test": "jest -- --coverage",
-    "ci:test": "jest -- --coverage --runInBand", 
+    "test": "jest",
     "dev": "npx nodemon --watch src --ext ts --exec 'ts-node ./src/main.ts'",
     "build": "tsc",
     "format": "prettier --write .",
