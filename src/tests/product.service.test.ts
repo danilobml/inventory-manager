@@ -2,10 +2,6 @@ import { ProductServiceImplementation } from '../services/product.service.implem
 import { ProductRepository } from '../repositories/interfaces/product.repository';
 import { Product } from '../entities/product';
 import { ProductDto } from '../dtos/product.dto';
-import { SellResponseDto } from '../dtos/sell-response.dto';
-import { BuyResponseDto } from '../dtos/buy-response.dto';
-import { ListResponseDto } from '../dtos/list-response.dto';
-import { AddProductResponseDto } from '../dtos/add-product-response.dto';
 
 describe('Product Service', () => {
   let productService: ProductServiceImplementation;
@@ -122,5 +118,16 @@ describe('Product Service', () => {
     productRepositoryMock.delete.mockRejectedValue(new Error('Product not found'));
 
     await expect(productService.removeProduct('invalid_id')).rejects.toThrow('Product not found');
+  });
+
+  test('should assign a department successfully', async () => {
+    const product = Product.build('NewProduct', 40);
+    productRepositoryMock.findById.mockResolvedValue(product);
+    productRepositoryMock.update.mockResolvedValue(product);
+
+    const result = await productService.assignDepartmentToProduct(product.id, 'TestDepartment');
+
+    expect(productRepositoryMock.update).toHaveBeenCalled();
+    expect(result).toEqual({ id: product.id, productName: product.name, departmentId: product.departmentId });
   });
 });

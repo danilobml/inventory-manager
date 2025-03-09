@@ -1,5 +1,5 @@
 import { ProductDto } from './product.dto';
 
-export type ListResponseDto = {
+export type ListProductsResponseDto = {
   products: ProductDto[];
 };

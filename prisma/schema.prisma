@@ -5,7 +5,14 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
+}
+
+model User {
+  @@map("users")
+  id String @id
+  email String @unique
+  password String
 }
 
 model Product {
@@ -14,11 +21,13 @@ model Product {
   name String
   price Float
   quantity Int
+  department Department? @relation(fields: [departmentId], references: [id])
+  departmentId String?
 }
 
-model User {
-  @@map("users")
+model Department {
+  @@map("departments")
   id String @id
-  email String @unique
-  password String
+  name String @unique
+  products Product[]
 }
