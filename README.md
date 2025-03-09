@@ -42,5 +42,14 @@
 - POST: http://localhost:3001/api/v1/products -> creates one product (body: {"name": string, "price": float})
 - POST: http://localhost:3001/api/v1/products/{id}/buy -> buys (increases stock) of that product (body: {"amount": integer})
 - POST: http://localhost:3001/api/v1/products/{id}/sell -> sells (decreases stock) of that product (body: {"amount": integer})
+- POST: http://localhost:3001/api/v1/products/{id}/assign-department -> assigns a departmentId of an existing department - check below how to create one (body: {"departmentId": string})
 - PUT: http://localhost:3001/api/v1/products/{id} -> updates one product (body: {"name": string [optional], "price": float [optional]})
 - DELETE: http://localhost:3001/api/v1/products/{id} -> removes product from inventory
+
+### Department
+
+- GET: http://localhost:3001/api/v1/departments -> lists all departments
+- GET: http://localhost:3001/api/v1/departments/{id}/products -> lists all products pertaining to one department
+- POST: http://localhost:3001/api/v1/departments -> creates one department (body: {"name": string [unique]})
+- PUT: http://localhost:3001/api/v1/departments/{id} -> updates one department (body: {"name": string})
+- DELETE: http://localhost:3001/api/v1/departments/{id} -> removes department
