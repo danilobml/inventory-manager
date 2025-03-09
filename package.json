@@ -5,6 +5,7 @@
   "scripts": {
     "test": "jest -o",
     "commit:test": "jest -- --coverage",
+    "ci:test": "jest -- --coverage --runInBand", 
     "dev": "npx nodemon --watch src --ext ts --exec 'ts-node ./src/main.ts'",
     "build": "tsc",
     "format": "prettier --write .",
