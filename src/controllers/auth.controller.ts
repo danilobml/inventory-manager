@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
-import { AuthRepositoryPrismaImplementation } from '../repositories/auth.repository.implementation';
+import { AuthRepositoryPrismaImplementation } from '../repositories/auth.repository.prisma.implementation';
+import { AuthService } from '../services/interfaces/auth.service';
 import { AuthServiceImplementation } from '../services/auth.service.implementation';
 import { prisma } from '../utils/prisma.util';
 
 export class AuthController {
-  private static authService: AuthServiceImplementation;
+  private static authService: AuthService;
 
   private constructor() {}
 
@@ -12,7 +13,7 @@ export class AuthController {
     return new AuthController();
   }
 
-  private static getAuthService() {
+  private static getAuthService(): AuthService {
     if (!this.authService) {
       const authRepository = AuthRepositoryPrismaImplementation.build(prisma);
       return AuthServiceImplementation.build(authRepository);

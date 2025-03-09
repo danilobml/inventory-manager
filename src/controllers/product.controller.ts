@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
-import { ProductRepositoryPrismaImplementation } from '../repositories/product.repository.implementation';
+import { ProductRepositoryPrismaImplementation } from '../repositories/product.repository.prisma.implementation';
 import { ProductServiceImplementation } from '../services/product.service.implementation';
 import { prisma } from '../utils/prisma.util';
+import { validateDepartmentIdSchema } from '../validation/department.validation';
+import { ZodError } from 'zod';
 
 export class ProductController {
   private static productService: ProductServiceImplementation;
@@ -44,10 +46,15 @@ export class ProductController {
   public async createNewProduct(req: Request, res: Response) {
     try {
       const { name, price } = req.body;
-      const response = await ProductController.getProductService().addProduct(name, price);
+      const { departmentId } = await validateDepartmentIdSchema.parseAsync(req.body);
+
+      const response = await ProductController.getProductService().addProduct(name, price, departmentId);
       res.status(201).json(response);
     } catch (error) {
       console.error('Error in createNewProduct:', error);
+      if (error instanceof ZodError) {
+        res.status(404).json({ message: `Department with the supplied id doesn't exist. Please choose a valid one.` });
+      }
       res.status(400).json({ message: 'Invalid product data' });
     }
   }
@@ -82,12 +89,34 @@ export class ProductController {
     try {
       const { id } = req.params;
       const { name, price } = req.body;
-      const response = await ProductController.getProductService().updateProduct(id, name, price);
+      const { departmentId } = await validateDepartmentIdSchema.parseAsync(req.body);
+
+      const response = await ProductController.getProductService().updateProduct(id, name, price, departmentId ?? null);
       res.status(200).json(response);
     } catch (error: unknown) {
+      console.error(`Error in updateProductInfo(${req.params.id}):`, error);
+      if (error instanceof ZodError) {
+        res.status(404).json({ message: `Department with the supplied id doesn't exist. Please choose a valid one.` });
+      }
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error(`Error in sellProduct(${req.params.id}, ${req.body.amount}):`, error);
-      res.status(400).json({ message: 'Sale operation failed: ', cause: errorMessage });
+      res.status(400).json({ message: 'Update operation failed: ', cause: errorMessage });
+    }
+  }
+
+  public async assigndepartmentToProduct(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { departmentId } = await validateDepartmentIdSchema.parseAsync(req.body);
+      const response = await ProductController.getProductService().assignDepartmentToProduct(id, departmentId!);
+      res.status(200).json(response);
+    } catch (error) {
+      console.error(`Error in updateProductInfo(${req.params.id}):`, error);
+      if (error instanceof ZodError) {
+        res.status(404).json({ message: `Department with the supplied id doesn't exist. Please choose a valid one.` });
+        return;
+      }
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      res.status(400).json({ message: 'Update operation failed: ', cause: errorMessage });
     }
   }
 

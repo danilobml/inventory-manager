@@ -2,10 +2,11 @@ import { ProductService } from './interfaces/product.service';
 import { ProductRepository } from '../repositories/interfaces/product.repository';
 import { SellResponseDto } from '../dtos/sell-response.dto';
 import { BuyResponseDto } from '../dtos/buy-response.dto';
-import { ListResponseDto } from '../dtos/list-response.dto';
+import { ListProductsResponseDto } from '../dtos/list-product-response.dto';
 import { ProductDto } from '../dtos/product.dto';
 import { AddProductResponseDto } from '../dtos/add-product-response.dto';
 import { Product } from '../entities/product';
+import { AssignDepartmentResponseDto } from '../dtos/assign-department-response.dto';
 
 export class ProductServiceImplementation implements ProductService {
   private constructor(readonly productRepository: ProductRepository) {}
@@ -14,7 +15,7 @@ export class ProductServiceImplementation implements ProductService {
     return new ProductServiceImplementation(productRepository);
   }
 
-  public async listInventory(): Promise<ListResponseDto> {
+  public async listInventory(): Promise<ListProductsResponseDto> {
     try {
       const productList = await this.productRepository.list();
       const productDtoList: ProductDto[] = productList.map((product) => ({
@@ -84,9 +85,9 @@ export class ProductServiceImplementation implements ProductService {
     }
   }
 
-  public async addProduct(name: string, price: number): Promise<AddProductResponseDto> {
+  public async addProduct(name: string, price: number, departmentId?: string): Promise<AddProductResponseDto> {
     try {
-      const newProduct = await this.productRepository.save(Product.build(name, price));
+      const newProduct = await this.productRepository.save(Product.build(name, price, departmentId));
       return { id: newProduct.id, balance: newProduct.quantity };
     } catch (error) {
       console.error('Error in addProduct():', error);
@@ -94,7 +95,12 @@ export class ProductServiceImplementation implements ProductService {
     }
   }
 
-  public async updateProduct(id: string, name: string, price: number): Promise<ProductDto> {
+  public async updateProduct(
+    id: string,
+    name: string,
+    price: number,
+    departmentId: string | null,
+  ): Promise<ProductDto> {
     try {
       const productToUpdate = await this.productRepository.findById(id);
       if (!productToUpdate) {
@@ -106,6 +112,7 @@ export class ProductServiceImplementation implements ProductService {
         name || productToUpdate.name,
         price || productToUpdate.price,
         productToUpdate.quantity,
+        departmentId ?? productToUpdate.departmentId,
       );
 
       const updatedProduct = await this.productRepository.update(productWithUpdates);
@@ -118,6 +125,36 @@ export class ProductServiceImplementation implements ProductService {
       };
 
       return updatedProductDto;
+    } catch (error) {
+      console.error('Error in addProduct():', error);
+      throw error;
+    }
+  }
+
+  public async assignDepartmentToProduct(id: string, departmentId: string): Promise<AssignDepartmentResponseDto> {
+    try {
+      const productToAssign = await this.productRepository.findById(id);
+      if (!productToAssign) {
+        throw new Error('Product not found');
+      }
+
+      const productWithDepartment = Product.with(
+        productToAssign.id,
+        productToAssign.name,
+        productToAssign.price,
+        productToAssign.quantity,
+        departmentId,
+      );
+
+      const assignedProduct = await this.productRepository.update(productWithDepartment);
+
+      const assignDepartmentResponseDto: AssignDepartmentResponseDto = {
+        id: assignedProduct.id,
+        productName: assignedProduct.name,
+        departmentId: assignedProduct.departmentId!,
+      };
+
+      return assignDepartmentResponseDto;
     } catch (error) {
       console.error('Error in addProduct():', error);
       throw error;
