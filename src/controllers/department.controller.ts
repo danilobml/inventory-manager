@@ -45,7 +45,9 @@ export class DepartmentController {
         return;
       }
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      res.status(400).json({ message: 'Update operation failed: ', cause: errorMessage });
+      if (errorMessage.match('not found')) {
+        res.status(400).json({ message: 'Failure creating department', cause: errorMessage });
+      }
     }
   }
 
@@ -58,10 +60,10 @@ export class DepartmentController {
     } catch (error) {
       console.error(`Error in updateProductInfo(${req.params.id}):`, error);
       if (error instanceof ZodError) {
-        res.status(404).json({ message: `Department with the supplied name already exists.` });
+        res.status(400).json({ message: `Department with the supplied name already exists.` });
       }
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      res.status(400).json({ message: 'Update operation failed: ', cause: errorMessage });
+      res.status(400).json({ message: 'Update operation failed', cause: errorMessage });
     }
   }
 
@@ -73,7 +75,7 @@ export class DepartmentController {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       console.error(`Error in removeProduct(${req.params.id}):`, error);
-      res.status(400).json({ message: 'Product deletion failed: ', cause: errorMessage });
+      res.status(400).json({ message: 'Department deletion failed', cause: errorMessage });
     }
   }
 
@@ -84,8 +86,8 @@ export class DepartmentController {
       res.status(200).json(response);
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      console.error(`Error in removeProduct(${req.params.id}):`, error);
-      res.status(400).json({ message: 'Product deletion failed: ', cause: errorMessage });
+      console.error(`Error in getDepartmentProducts(${req.params.id}):`, error);
+      res.status(400).json({ message: "Failure listing department's products", cause: errorMessage });
     }
   }
 }
